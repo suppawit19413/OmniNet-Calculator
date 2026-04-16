@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniNet - Advanced Network Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --surface-color: rgba(20, 20, 25, 0.6);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --primary: #4A00E0;
+            --secondary: #8E2DE2;
+            --accent: #00F4E6;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            z-index: -1;
+            top: -200px;
+            left: -200px;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            z-index: -1;
+            bottom: -100px;
+            right: -100px;
+            animation: float 15s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        header {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: var(--surface-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 16px rgba(74, 0, 224, 0.4);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(0, 244, 230, 0.1);
+        }
+
+        select option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-family: var(--font-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(142, 45, 226, 0.3);
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .results {
+            margin-top: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .result-val {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <header>
+        <h1>OmniNet</h1>
+        <div class="subtitle">Next-Generation Network Toolkit</div>
+    </header>
+
+    <div class="container">
+        <!-- Subnet Calculator -->
+        <div class="glass-card">
+            <div class="card-header">
+                <div class="card-icon">ðŸŒ</div>
+                <h2>Subnet Calculator</h2>
+            </div>
+            
+            <div class="input-group">
+                <label>IPv4 Address</label>
+                <input type="text" id="ipInput" placeholder="e.g. 192.168.1.10" value="192.168.1.10">
+            </div>
+            <div class="input-group">
+                <label>CIDR Notation (/)</label>
+                <input type="number" id="cidrInput" placeholder="e.g. 24" value="24" min="0" max="32">
+            </div>
+            
+            <button onclick="calculateSubnet()">Analyze Subnet</button>
+
+            <div id="subnetResults" class="results">
+                <div class="result-row">
+                    <span class="result-label">Network Address</span>
+                    <span class="result-val" id="resNetwork">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Broadcast Address</span>
+                    <span class="result-val" id="resBroadcast">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Subnet Mask</span>
+                    <span class="result-val" id="resMask">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Usable Hosts</span>
+                    <span class="result-val" id="resHosts">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Time Calculator -->
+        <div class="glass-card">
+            <div class="card-header">
+                <div class="card-icon">âš¡</div>
+                <h2>Transfer Speed</h2>
+            </div>
+            
+            <div class="input-group">
+                <label>File Size</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="fileSize" placeholder="Size" value="10" style="flex: 2;">
+                    <select id="fileUnit" style="flex: 1;">
+                        <option value="MB">MB</option>
+                        <option value="GB" selected>GB</option>
+                        <option value="TB">TB</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Bandwidth Speed</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="bandwidth" placeholder="Speed" value="100" style="flex: 2;">
+                    <select id="bwUnit" style="flex: 1;">
+                        <option value="Mbps" selected>Mbps</option>
+                        <option value="MBs">MB/s</option>
+                        <option value="Gbps">Gbps</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button onclick="calculateTransfer()">Calculate Time</button>
+
+            <div id="transferResults" class="results">
+                <div class="result-row">
+                    <span class="result-label">Estimated Time</span>
+                    <span class="result-val" id="resTime">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Actual Speed</span>
+                    <span class="result-val" id="resSpeed">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ip2long(ip) {
+            return ip.split('.').reduce((ipInt, octet) => (ipInt << 8) + parseInt(octet, 10), 0) >>> 0;
+        }
+
+        function long2ip(long) {
+            return [
+                (long >>> 24) & 255,
+                (long >>> 16) & 255,
+                (long >>> 8) & 255,
+                long & 255
+            ].join('.');
+        }
+
+        function calculateSubnet() {
+            const ipStr = document.getElementById('ipInput').value;
+            const cidr = parseInt(document.getElementById('cidrInput').value);
+
+            try {
+                const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+                if (!ipRegex.test(ipStr)) throw new Error("Invalid IP");
+                if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error("Invalid CIDR");
+
+                const ipLong = ip2long(ipStr);
+                const maskLong = cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
+                
+                const networkLong = (ipLong & maskLong) >>> 0;
+                const broadcastLong = (networkLong | ~maskLong) >>> 0;
+                
+                const hostsCount = cidr >= 31 ? 0 : Math.pow(2, 32 - cidr) - 2;
+
+                document.getElementById('resNetwork').innerText = long2ip(networkLong);
+                document.getElementById('resBroadcast').innerText = long2ip(broadcastLong);
+                document.getElementById('resMask').innerText = long2ip(maskLong);
+                document.getElementById('resHosts').innerText = hostsCount.toLocaleString();
+                
+                document.getElementById('subnetResults').style.display = 'block';
+            } catch (e) {
+                alert("Please enter a valid IPv4 address and CIDR.");
+            }
+        }
+
+        function calculateTransfer() {
+            const size = parseFloat(document.getElementById('fileSize').value);
+            const sizeUnit = document.getElementById('fileUnit').value;
+            
+            const speed = parseFloat(document.getElementById('bandwidth').value);
+            const speedUnit = document.getElementById('bwUnit').value;
+
+            if (isNaN(size) || isNaN(speed) || speed <= 0) {
+                alert("Please enter valid numbers");
+                return;
+            }
+
+            // Convert size to Megabytes (MB)
+            let sizeInMB = size;
+            if (sizeUnit === 'GB') sizeInMB = size * 1024;
+            if (sizeUnit === 'TB') sizeInMB = size * 1024 * 1024;
+
+            // Convert speed to Megabytes per second (MB/s)
+            let speedInMbs = speed;
+            if (speedUnit === 'Mbps') speedInMbs = speed / 8;
+            if (speedUnit === 'Gbps') speedInMbs = (speed * 1000) / 8;
+
+            const seconds = sizeInMB / speedInMbs;
+
+            // Formatter
+            let timeStr = "";
+            let remaining = Math.round(seconds);
+            
+            const h = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+
+            if (h > 0) timeStr += `${h}h `;
+            if (m > 0 || h > 0) timeStr += `${m}m `;
+            timeStr += `${s}s`;
+
+            document.getElementById('resTime').innerText = timeStr;
+            document.getElementById('resSpeed').innerText = `${speedInMbs.toFixed(2)} MB/s`;
+            
+            document.getElementById('transferResults').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
