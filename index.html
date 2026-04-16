@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OmniNet - Ultimate Network Toolkit</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -35,17 +35,19 @@
 
         /* Dynamic Background */
         .bg-glow {
-            position: fixed; width: 600px; height: 600px;
+            position: fixed; width: 60vw; height: 60vw;
+            min-width: 400px; min-height: 400px;
             background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
             border-radius: 50%; filter: blur(120px); opacity: 0.3;
-            z-index: -1; top: -150px; left: -150px;
+            z-index: -1; top: -15vh; left: -15vw;
             animation: float 12s infinite alternate ease-in-out;
         }
         .bg-glow-2 {
-            position: fixed; width: 500px; height: 500px;
+            position: fixed; width: 50vw; height: 50vw;
+            min-width: 350px; min-height: 350px;
             background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
             border-radius: 50%; filter: blur(120px); opacity: 0.25;
-            z-index: -1; bottom: -100px; right: -100px;
+            z-index: -1; bottom: -10vh; right: -10vw;
             animation: float 15s infinite alternate-reverse ease-in-out;
         }
 
@@ -54,53 +56,65 @@
             100% { transform: translate(40px, 40px) scale(1.1); }
         }
 
-        header { padding: 3rem 2rem 2rem; text-align: center; }
+        header { padding: clamp(2rem, 5vh, 4rem) 1.5rem 2rem; text-align: center; }
         
         h1 {
-            font-size: 3.5rem; font-weight: 800;
+            font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 800;
             background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem; letter-spacing: -1px;
+            line-height: 1.1;
         }
-        .subtitle { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+        .subtitle { color: var(--text-muted); font-size: clamp(0.9rem, 2.5vw, 1.1rem); font-weight: 300; }
 
         .container {
-            max-width: 1400px; margin: 0 auto; padding: 0 2rem 4rem;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem; z-index: 1;
+            max-width: 1400px; width: 100%; margin: 0 auto; 
+            padding: 0 clamp(1rem, 3vw, 2rem) 4rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(1rem, 2vw, 2rem); z-index: 1;
         }
 
         .glass-card {
             background: var(--surface-color); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--surface-border); border-radius: 24px;
-            padding: 2.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex; flex-direction: column;
+            padding: clamp(1.5rem, 4vw, 2.5rem); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column; width: 100%;
         }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+        @media (hover: hover) {
+            .glass-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+            }
         }
 
-        .card-header { display: flex; align-items: center; margin-bottom: 2rem; }
+        .card-header { display: flex; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .card-icon {
             width: 48px; height: 48px; border-radius: 12px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex; align-items: center; justify-content: center;
-            margin-right: 1rem; box-shadow: 0 8px 16px rgba(74, 0, 224, 0.4);
+            box-shadow: 0 8px 16px rgba(74, 0, 224, 0.4); flex-shrink: 0;
         }
         .card-icon svg { width: 24px; height: 24px; fill: white; }
-        h2 { font-size: 1.5rem; font-weight: 600; }
+        h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 600; line-height: 1.2; }
 
-        .input-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;}
-        .input-row { display: flex; gap: 0.5rem; }
+        .input-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .input-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .input-row > * { flex: 1 1 100px; }
+        
         label { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
         
         input, select {
             width: 100%; background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-main); font-family: var(--font-mono);
-            padding: 1rem; border-radius: 12px; font-size: 1rem;
-            transition: all 0.2s ease; outline: none;
+            padding: clamp(0.8rem, 2vw, 1rem); border-radius: 12px; font-size: 1rem;
+            transition: all 0.2s ease; outline: none; appearance: none;
+        }
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
         }
         input:focus, select:focus {
             border-color: var(--accent); background: rgba(255, 255, 255, 0.08);
@@ -110,10 +124,10 @@
 
         button {
             width: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 1.2rem; border-radius: 12px;
-            font-family: var(--font-main); font-size: 1.1rem; font-weight: 600;
+            color: white; border: none; padding: clamp(1rem, 2vw, 1.2rem); border-radius: 12px;
+            font-family: var(--font-main); font-size: clamp(1rem, 2vw, 1.1rem); font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden;
-            margin-top: auto; /* push to bottom of card */
+            margin-top: auto; 
         }
         button::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
@@ -126,31 +140,25 @@
 
         .results {
             margin-top: 2rem; background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px; padding: 1.5rem;
+            border-radius: 12px; padding: clamp(1rem, 3vw, 1.5rem);
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: none; animation: fadeIn 0.4s ease;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .result-row {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between; align-items: flex-start;
             margin-bottom: 0.8rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap; gap: 0.5rem;
         }
         .result-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .result-label { color: var(--text-muted); font-size: 0.9rem; }
-        .result-val { font-family: var(--font-mono); font-weight: 700; color: var(--accent); text-align: right; word-break: break-all; max-width: 60%; }
-        .result-val.error { color: var(--danger); }
-        
-        .tab-btn-group { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); padding: 0.3rem; border-radius: 12px;}
-        .tab-btn { 
-            flex: 1; padding: 0.6rem; border-radius: 8px; background: transparent; 
-            border: none; color: var(--text-muted); font-family: var(--font-main); 
-            font-weight: 600; cursor: pointer; transition: 0.3s; margin: 0;
+        .result-label { color: var(--text-muted); font-size: 0.9rem; flex: 1 1 100px; }
+        .result-val { 
+            font-family: var(--font-mono); font-weight: 700; color: var(--accent); 
+            text-align: right; word-break: break-all; flex: 2 1 120px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
         }
-        .tab-btn.active { background: rgba(255,255,255,0.1); color: var(--text-main); }
-        .tab-btn:hover:not(.active) { color: var(--text-main); }
         
-        /* Utility */
         svg { width: 24px; height: 24px; }
     </style>
 </head>
@@ -236,10 +244,10 @@
             <button onclick="convertMAC()">Process MAC</button>
 
             <div id="macResults" class="results">
-                <div class="result-row"><span class="result-label">Linux/Vendor (XX:XX:XX)</span><span class="result-val" id="resMacColon">-</span></div>
-                <div class="result-row"><span class="result-label">Windows (XX-XX-XX)</span><span class="result-val" id="resMacDash">-</span></div>
-                <div class="result-row"><span class="result-label">Cisco (XXXX.XXXX.XXXX)</span><span class="result-val" id="resMacDot">-</span></div>
-                <div class="result-row"><span class="result-label">IPv6 EUI-64 Interface ID</span><span class="result-val" id="resMacEui">-</span></div>
+                <div class="result-row"><span class="result-label">Linux/Vendor</span><span class="result-val" id="resMacColon">-</span></div>
+                <div class="result-row"><span class="result-label">Windows</span><span class="result-val" id="resMacDash">-</span></div>
+                <div class="result-row"><span class="result-label">Cisco</span><span class="result-val" id="resMacDot">-</span></div>
+                <div class="result-row"><span class="result-label">IPv6 EUI-64</span><span class="result-val" id="resMacEui">-</span></div>
             </div>
         </div>
 
@@ -278,7 +286,7 @@
             <button onclick="calculateTransfer()">Estimate Transfer</button>
 
             <div id="bwResults" class="results">
-                <div class="result-row"><span class="result-label">Total Data Transfer</span><span class="result-val" id="resBwData">-</span></div>
+                <div class="result-row"><span class="result-label">Total Data</span><span class="result-val" id="resBwData">-</span></div>
                 <div class="result-row"><span class="result-label">Throughput</span><span class="result-val" id="resBwThroughput">-</span></div>
                 <div class="result-row"><span class="result-label">Estimated Time</span><span class="result-val" id="resBwTime" style="color: #fff;">-</span></div>
             </div>
@@ -416,18 +424,14 @@
                 alert("Please enter valid positive numbers."); return;
             }
 
-            // Size in Megabytes (MB)
             let sizeMB = size;
             if(sizeUnit === 'GB') sizeMB *= 1024;
             if(sizeUnit === 'TB') sizeMB *= 1048576;
 
-            // Speed in Megabits per second (Mbps)
             let speedMbps = speed;
             if(speedUnit === 'Gbps') speedMbps *= 1000;
-            if(speedUnit === 'MBs') speedMbps *= 8; // MB/s to Mbps
+            if(speedUnit === 'MBs') speedMbps *= 8;
 
-            // 1 Byte = 8 bits. Wait, sizeMB is Megabytes. speedMbps is Megabits per sec.
-            // Time (seconds) = (Size in Megabytes * 8) / Speed in Megabits per second
             let seconds = (sizeMB * 8) / speedMbps;
 
             let timeStr = "";
